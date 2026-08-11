@@ -1,0 +1,17 @@
+# macOS (Apple Silicon M-series) dependencies
+# bitsandbytes is intentionally excluded — not supported on MPS.
+# PyTorch's default macOS wheel includes MPS support automatically.
+
+torch>=2.3.0
+torchvision>=0.18.0
+transformers>=4.51.0
+accelerate>=0.30.0
+pydicom>=2.4.0
+pillow>=10.0.0
+numpy>=1.26.0
+matplotlib>=3.8.0
+tqdm>=4.66.0
+huggingface_hub>=0.27.0   # provides the `hf` CLI (hf auth login)
+peft>=0.10.0
+pandas>=2.0.0
+pyarrow>=14.0.0

@@ -1,0 +1,9 @@
+openi/
+dataset/
+smoke_output/
+*.csv
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

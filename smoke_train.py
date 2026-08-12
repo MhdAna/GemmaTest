@@ -11,8 +11,8 @@ import pandas as pd
 from PIL import Image as PILImage
 from torch.utils.data import Dataset, DataLoader
 from torch.optim import AdamW
-from transformers import AutoProcessor, AutoModelForImageTextToText
-from peft import LoraConfig, get_peft_model, PeftModel
+from transformers import AutoProcessor, AutoModelForImageTextToText, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, PeftModel, prepare_model_for_kbit_training
 from dicom_utils import load_dicom, dicom_to_pil
 
 os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
@@ -32,6 +32,8 @@ parser.add_argument("--single-view", action="store_true",
                     help="Use frontal image only even if lateral exists")
 parser.add_argument("--mps-autocast", action="store_true",
                     help="Enable bfloat16 autocast on MPS (off by default for stability)")
+parser.add_argument("--load-in-4bit", action="store_true",
+                    help="Load model in 4-bit quantization (QLoRA) to save VRAM on T4")
 args = parser.parse_args()
 
 # ── Config ─────────────────────────────────────────────────────────────────────
@@ -146,11 +148,25 @@ class SyntheticDataset(Dataset):
 
 # ── Load model ─────────────────────────────────────────────────────────────────
 processor = AutoProcessor.from_pretrained(MODEL_ID)
-model = AutoModelForImageTextToText.from_pretrained(
-    MODEL_ID,
-    dtype=MODEL_DTYPE,
-    device_map={"": DEVICE},
-)
+if args.load_in_4bit and DEVICE == "cuda":
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_use_double_quant=True,
+    )
+    model = AutoModelForImageTextToText.from_pretrained(
+        MODEL_ID,
+        quantization_config=bnb_config,
+        device_map="auto",
+    )
+    model = prepare_model_for_kbit_training(model)
+else:
+    model = AutoModelForImageTextToText.from_pretrained(
+        MODEL_ID,
+        dtype=MODEL_DTYPE,
+        device_map={"": DEVICE},
+    )
 print(f"Model loaded  params={sum(p.numel() for p in model.parameters()):,}")
 
 lora_cfg = LoraConfig(

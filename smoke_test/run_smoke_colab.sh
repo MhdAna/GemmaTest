@@ -17,7 +17,7 @@ set -euo pipefail
 
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 OPENI_DIR="${OPENI_DIR:-$REPO_DIR/openi}"
-CSV_PATH="${CSV_PATH:-/content/smoke_subset.csv}"
+CSV_PATH="${CSV_PATH:-$REPO_DIR/smoke_subset.csv}"
 OUT_DIR="${OUT_DIR:-/content/smoke_output}"
 RUN_EVAL="${RUN_EVAL:-0}"
 ADAPTER_DIR="${ADAPTER_DIR:-/content/drive/MyDrive/medgemma_smoke_output}"

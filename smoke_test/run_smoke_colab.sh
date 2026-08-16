@@ -9,6 +9,8 @@ set -euo pipefail
 #   OPENI_REUSE=1
 #   CSV_REUSE=1
 #   RUN_EVAL=1
+#   HF_TOKEN=<hf_token_with_model_access>
+#   HF_LOGIN_REQUIRED=1
 #   ADAPTER_DIR=/content/drive/MyDrive/medgemma_smoke_output
 #   EVAL_LIMIT=100
 #   SAVE_RESULTS_VERSION=1
@@ -24,6 +26,9 @@ OUT_DIR="${OUT_DIR:-/content/smoke_output}"
 OPENI_REUSE="${OPENI_REUSE:-1}"
 CSV_REUSE="${CSV_REUSE:-1}"
 RUN_EVAL="${RUN_EVAL:-0}"
+HF_TOKEN="${HF_TOKEN:-}"
+HF_LOGIN_REQUIRED="${HF_LOGIN_REQUIRED:-1}"
+HF_PREFLIGHT_CHECK="${HF_PREFLIGHT_CHECK:-1}"
 ADAPTER_DIR="${ADAPTER_DIR:-/content/drive/MyDrive/medgemma_smoke_output}"
 EVAL_LIMIT="${EVAL_LIMIT:-100}"
 SAVE_RESULTS_VERSION="${SAVE_RESULTS_VERSION:-0}"
@@ -44,7 +49,7 @@ cd "$REPO_DIR"
 echo "[2/8] Install dependencies"
 python -m pip install -U pip
 python -m pip install -r requirements-macos.txt
-python -m pip install -U bitsandbytes>=0.46.1 evaluate rouge-score bert-score
+python -m pip install -U "bitsandbytes>=0.46.1" evaluate rouge-score bert-score
 
 echo "[3/8] Prepare OpenI dataset"
 mkdir -p "$OPENI_DIR"
@@ -89,7 +94,50 @@ if [[ ! -f "$CSV_PATH" ]]; then
   exit 1
 fi
 
-echo "[6/8] Run smoke training"
+echo "[6/8] Authenticate Hugging Face (for gated model access)"
+if [[ -n "$HF_TOKEN" ]]; then
+  export HUGGINGFACE_HUB_TOKEN="$HF_TOKEN"
+  export HF_TOKEN="$HF_TOKEN"
+  python - <<'PY'
+import os
+from huggingface_hub import login
+
+token = os.environ.get("HF_TOKEN", "")
+if token:
+    login(token=token, add_to_git_credential=False)
+PY
+elif [[ "$HF_LOGIN_REQUIRED" == "1" ]]; then
+  echo "ERROR: HF_TOKEN is required for gated model google/medgemma-4b-it."
+  echo "Get access at: https://huggingface.co/google/medgemma-4b-it"
+  echo "Then run with: HF_TOKEN=hf_xxx bash $REPO_DIR/smoke_test/run_smoke_colab.sh"
+  exit 1
+else
+  echo "HF_TOKEN not set; continuing without login (may fail if model access is gated)."
+fi
+
+if [[ "$HF_PREFLIGHT_CHECK" == "1" ]]; then
+  echo "[6/8] Preflight check: verify access to google/medgemma-4b-it"
+  python - <<'PY'
+import os
+import sys
+from huggingface_hub import HfApi
+
+model_id = "google/medgemma-4b-it"
+token = os.environ.get("HUGGINGFACE_HUB_TOKEN") or os.environ.get("HF_TOKEN")
+
+try:
+    HfApi().model_info(model_id, token=token)
+    print(f"HF access OK: {model_id}")
+except Exception as e:
+    print(f"ERROR: Hugging Face access check failed for {model_id}.")
+    print("Make sure you requested access at: https://huggingface.co/google/medgemma-4b-it")
+    print("Then provide HF_TOKEN when running this script.")
+    print(f"Details: {e}")
+    sys.exit(1)
+PY
+fi
+
+echo "[7/8] Run smoke training"
 python "$REPO_DIR/smoke_test/smoke_train.py" \
   --openi \
   --images "$OPENI_DIR" \
@@ -98,7 +146,7 @@ python "$REPO_DIR/smoke_test/smoke_train.py" \
   --max-seq-len 512 \
   --load-in-4bit
 
-echo "[7/8] Confirm output files"
+echo "[8/8] Confirm output files"
 ls -lah "$OUT_DIR"
 
 if [[ "$RUN_EVAL" == "1" ]]; then

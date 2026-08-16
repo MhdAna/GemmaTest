@@ -22,7 +22,7 @@ set -euo pipefail
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 OPENI_DIR="${OPENI_DIR:-$REPO_DIR/openi}"
 CSV_PATH="${CSV_PATH:-$REPO_DIR/smoke_subset.csv}"
-OUT_DIR="${OUT_DIR:-/content/smoke_output}"
+OUT_DIR="${OUT_DIR:-$REPO_DIR/smoke_output}"
 OPENI_REUSE="${OPENI_REUSE:-1}"
 CSV_REUSE="${CSV_REUSE:-1}"
 RUN_EVAL="${RUN_EVAL:-0}"

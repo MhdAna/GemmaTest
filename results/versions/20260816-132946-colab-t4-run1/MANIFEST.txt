@@ -1,0 +1,6 @@
+version_id: 20260816-132946-colab-t4-run1
+created_utc: 2026-08-16T13:29:46Z
+base_commit: a5eaddba499ca001678c017670dbdfff8431c21f
+results_dir: /content/GemmaTest/smoke_output
+eval_dir: /content/eval_output
+csv_path: /content/drive/MyDrive/openi_cache/smoke_subset.csv

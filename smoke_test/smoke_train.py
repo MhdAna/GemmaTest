@@ -68,6 +68,18 @@ print(f"Model dtype: {MODEL_DTYPE}")
 if DEVICE == "mps" and not args.mps_autocast:
     print("MPS autocast disabled for stability")
 
+if args.load_in_4bit and DEVICE != "cuda":
+    raise RuntimeError(
+        "--load-in-4bit requires a CUDA GPU runtime. "
+        "In Colab, switch to Runtime -> Change runtime type -> GPU."
+    )
+
+if DEVICE == "cpu":
+    raise RuntimeError(
+        "No GPU detected. medgemma-4b-it is likely to OOM on CPU in Colab. "
+        "Use a GPU runtime (T4/L4/A100)."
+    )
+
 # Fail fast before loading the model if required files are missing
 if not args.synthetic:
     if not SUBSET_CSV.exists():
@@ -148,6 +160,7 @@ class SyntheticDataset(Dataset):
 
 # ── Load model ─────────────────────────────────────────────────────────────────
 processor = AutoProcessor.from_pretrained(MODEL_ID)
+
 if args.load_in_4bit and DEVICE == "cuda":
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -159,6 +172,7 @@ if args.load_in_4bit and DEVICE == "cuda":
         MODEL_ID,
         quantization_config=bnb_config,
         device_map="auto",
+        low_cpu_mem_usage=True,
     )
     model = prepare_model_for_kbit_training(model)
 else:
@@ -166,6 +180,7 @@ else:
         MODEL_ID,
         dtype=MODEL_DTYPE,
         device_map={"": DEVICE},
+        low_cpu_mem_usage=True,
     )
 print(f"Model loaded  params={sum(p.numel() for p in model.parameters()):,}")
 
@@ -264,9 +279,22 @@ print(f"✅  Adapter saved to {OUTPUT_DIR}/")
 
 
 # ── Reload & verify ────────────────────────────────────────────────────────────
-base     = AutoModelForImageTextToText.from_pretrained(
-    MODEL_ID, dtype=MODEL_DTYPE, device_map={"": DEVICE}
-)
+del model  # free VRAM before loading a second copy
+torch.cuda.empty_cache()
+if args.load_in_4bit and DEVICE == "cuda":
+    bnb_config_reload = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_use_double_quant=True,
+    )
+    base = AutoModelForImageTextToText.from_pretrained(
+        MODEL_ID, quantization_config=bnb_config_reload, device_map="auto"
+    )
+else:
+    base = AutoModelForImageTextToText.from_pretrained(
+        MODEL_ID, dtype=MODEL_DTYPE, device_map={"": DEVICE}
+    )
 reloaded = PeftModel.from_pretrained(base, str(OUTPUT_DIR))
 reloaded.eval()
 print("✅  Adapter reloaded successfully")

@@ -34,6 +34,18 @@ parser.add_argument("--mps-autocast", action="store_true",
                     help="Enable bfloat16 autocast on MPS (off by default for stability)")
 parser.add_argument("--load-in-4bit", action="store_true",
                     help="Load model in 4-bit quantization (QLoRA) to save VRAM on T4")
+parser.add_argument("--epochs", type=int, default=2,
+                    help="Number of training epochs")
+parser.add_argument("--lr", type=float, default=2e-4,
+                    help="Learning rate")
+parser.add_argument("--lora-r", type=int, default=8,
+                    help="LoRA rank")
+parser.add_argument("--lora-alpha", type=int, default=16,
+                    help="LoRA alpha")
+parser.add_argument("--lora-dropout", type=float, default=0.05,
+                    help="LoRA dropout")
+parser.add_argument("--lora-target-modules", type=str, default="q_proj,v_proj",
+                    help="Comma-separated LoRA target modules")
 args = parser.parse_args()
 
 # ── Config ─────────────────────────────────────────────────────────────────────
@@ -45,9 +57,9 @@ DATA_DIR     = args.images or (OPENI_DIR if args.openi else CHEXPERT_DIR)
 SUBSET_CSV   = ROOT / "smoke_subset.csv"
 OUTPUT_DIR   = ROOT / "smoke_output"
 DEVICE       = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
-NUM_EPOCHS   = 2
+NUM_EPOCHS   = args.epochs
 BATCH_SIZE   = args.batch_size
-LR           = 2e-4
+LR           = args.lr
 MAX_SEQ_LEN  = args.max_seq_len
 if DEVICE == "cuda":
     MODEL_DTYPE = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
@@ -65,6 +77,7 @@ PROMPT_TEMPLATE = (
 print(f"Device: {DEVICE}")
 print(f"Batch size: {BATCH_SIZE}  Max seq len: {MAX_SEQ_LEN}  Single view: {args.single_view}")
 print(f"Model dtype: {MODEL_DTYPE}")
+print(f"Epochs: {NUM_EPOCHS}  LR: {LR}")
 if DEVICE == "mps" and not args.mps_autocast:
     print("MPS autocast disabled for stability")
 
@@ -184,11 +197,15 @@ else:
     )
 print(f"Model loaded  params={sum(p.numel() for p in model.parameters()):,}")
 
+lora_target_modules = [m.strip() for m in args.lora_target_modules.split(",") if m.strip()]
+if not lora_target_modules:
+    raise ValueError("--lora-target-modules cannot be empty")
+
 lora_cfg = LoraConfig(
-    r=8,                                        # lower rank for smoke test speed
-    lora_alpha=16,
-    lora_dropout=0.05,
-    target_modules=["q_proj", "v_proj"],        # minimal targets; full run uses 7
+    r=args.lora_r,
+    lora_alpha=args.lora_alpha,
+    lora_dropout=args.lora_dropout,
+    target_modules=lora_target_modules,
     task_type="CAUSAL_LM",
 )
 model = get_peft_model(model, lora_cfg)

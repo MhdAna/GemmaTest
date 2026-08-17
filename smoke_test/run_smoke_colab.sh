@@ -133,15 +133,18 @@ else
 fi
 
 progress_step "Prepare smoke subset CSV"
+DEFAULT_SUBSET_CSV="$REPO_DIR/smoke_subset.csv"
 if [[ "$CSV_REUSE" == "1" && -f "$CSV_PATH" ]]; then
   echo "Reusing existing subset CSV at $CSV_PATH (build skipped)."
+  if [[ "$CSV_PATH" != "$DEFAULT_SUBSET_CSV" ]]; then
+    cp -f "$CSV_PATH" "$DEFAULT_SUBSET_CSV"
+  fi
 else
   python "$REPO_DIR/smoke_test/filter_openi.py" \
     --reports "$OPENI_DIR/ecgen-radiology" \
     --images "$OPENI_DIR"
 
   # filter_openi.py writes to $REPO_DIR/smoke_subset.csv. Copy if caller wants a custom path.
-  DEFAULT_SUBSET_CSV="$REPO_DIR/smoke_subset.csv"
   if [[ "$CSV_PATH" != "$DEFAULT_SUBSET_CSV" ]]; then
     mkdir -p "$(dirname "$CSV_PATH")"
     cp -f "$DEFAULT_SUBSET_CSV" "$CSV_PATH"

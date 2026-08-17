@@ -11,6 +11,17 @@ set -euo pipefail
 #   RUN_EVAL=1
 #   HF_TOKEN=<hf_token_with_model_access>
 #   HF_LOGIN_REQUIRED=1
+#   PROMPT_FOR_TOKENS=1
+#   BATCH_SIZE=1
+#   MAX_SEQ_LEN=512
+#   SINGLE_VIEW=1
+#   LOAD_IN_4BIT=1
+#   TRAIN_EPOCHS=2
+#   TRAIN_LR=2e-4
+#   LORA_R=8
+#   LORA_ALPHA=16
+#   LORA_DROPOUT=0.05
+#   LORA_TARGET_MODULES=q_proj,v_proj
 #   ADAPTER_DIR=/content/drive/MyDrive/medgemma_smoke_output
 #   EVAL_LIMIT=100
 #   SAVE_RESULTS_VERSION=1
@@ -18,6 +29,7 @@ set -euo pipefail
 #   PUSH_RESULTS=1
 #   GITHUB_REPO=MhdAna/GemmaTest
 #   GITHUB_TOKEN=<token>
+#   STATUS_FILE=/content/GemmaTest/smoke_status.txt
 
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 OPENI_DIR="${OPENI_DIR:-$REPO_DIR/openi}"
@@ -29,6 +41,17 @@ RUN_EVAL="${RUN_EVAL:-0}"
 HF_TOKEN="${HF_TOKEN:-}"
 HF_LOGIN_REQUIRED="${HF_LOGIN_REQUIRED:-1}"
 HF_PREFLIGHT_CHECK="${HF_PREFLIGHT_CHECK:-1}"
+PROMPT_FOR_TOKENS="${PROMPT_FOR_TOKENS:-1}"
+BATCH_SIZE="${BATCH_SIZE:-1}"
+MAX_SEQ_LEN="${MAX_SEQ_LEN:-512}"
+SINGLE_VIEW="${SINGLE_VIEW:-1}"
+LOAD_IN_4BIT="${LOAD_IN_4BIT:-1}"
+TRAIN_EPOCHS="${TRAIN_EPOCHS:-2}"
+TRAIN_LR="${TRAIN_LR:-2e-4}"
+LORA_R="${LORA_R:-8}"
+LORA_ALPHA="${LORA_ALPHA:-16}"
+LORA_DROPOUT="${LORA_DROPOUT:-0.05}"
+LORA_TARGET_MODULES="${LORA_TARGET_MODULES:-q_proj,v_proj}"
 ADAPTER_DIR="${ADAPTER_DIR:-/content/drive/MyDrive/medgemma_smoke_output}"
 EVAL_LIMIT="${EVAL_LIMIT:-100}"
 SAVE_RESULTS_VERSION="${SAVE_RESULTS_VERSION:-0}"
@@ -36,8 +59,44 @@ VERSION_LABEL="${VERSION_LABEL:-smoke}"
 PUSH_RESULTS="${PUSH_RESULTS:-0}"
 GITHUB_REPO="${GITHUB_REPO:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
+STATUS_FILE="${STATUS_FILE:-$REPO_DIR/smoke_status.txt}"
 
-echo "[1/8] Validate repository path"
+TOTAL_STEPS=8
+if [[ "$HF_PREFLIGHT_CHECK" == "1" ]]; then
+  TOTAL_STEPS=$((TOTAL_STEPS + 1))
+fi
+if [[ "$RUN_EVAL" == "1" ]]; then
+  TOTAL_STEPS=$((TOTAL_STEPS + 1))
+fi
+if [[ "$SAVE_RESULTS_VERSION" == "1" ]]; then
+  TOTAL_STEPS=$((TOTAL_STEPS + 1))
+fi
+
+CURRENT_STEP=0
+update_status() {
+  local message="$1"
+  local percent_remaining="$2"
+  mkdir -p "$(dirname "$STATUS_FILE")"
+  cat > "$STATUS_FILE" <<EOF
+step: ${CURRENT_STEP}/${TOTAL_STEPS}
+percent_remaining: ${percent_remaining}
+message: ${message}
+updated_utc: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+EOF
+}
+
+progress_step() {
+  local label="$1"
+  CURRENT_STEP=$((CURRENT_STEP + 1))
+  local percent_complete=$((CURRENT_STEP * 100 / TOTAL_STEPS))
+  local percent_remaining=$((100 - percent_complete))
+  echo "[${CURRENT_STEP}/${TOTAL_STEPS} | ${percent_remaining}% remaining] ${label}"
+  update_status "$label" "$percent_remaining"
+}
+
+update_status "Initializing" "100"
+
+progress_step "Validate repository path"
 if [[ ! -d "$REPO_DIR" ]]; then
   echo "ERROR: REPO_DIR not found: $REPO_DIR"
   echo "Clone repo first: git clone https://github.com/MhdAna/GemmaTest.git /content/GemmaTest"
@@ -46,12 +105,12 @@ fi
 
 cd "$REPO_DIR"
 
-echo "[2/8] Install dependencies"
+progress_step "Install dependencies"
 python -m pip install -U pip
 python -m pip install -r requirements-macos.txt
 python -m pip install -U "bitsandbytes>=0.46.1" evaluate rouge-score bert-score
 
-echo "[3/8] Prepare OpenI dataset"
+progress_step "Prepare OpenI dataset"
 mkdir -p "$OPENI_DIR"
 
 OPENI_READY=0
@@ -66,14 +125,14 @@ else
   curl -L --fail -o /content/NLMCXR_png.tgz https://openi.nlm.nih.gov/imgs/collections/NLMCXR_png.tgz
   curl -L --fail -o /content/NLMCXR_reports.tgz https://openi.nlm.nih.gov/imgs/collections/NLMCXR_reports.tgz
 
-  echo "[4/8] Verify and extract OpenI archives"
+  echo "Verify and extract OpenI archives"
   file /content/NLMCXR_png.tgz
   file /content/NLMCXR_reports.tgz
   tar -xzf /content/NLMCXR_png.tgz -C "$OPENI_DIR"
   tar -xzf /content/NLMCXR_reports.tgz -C "$OPENI_DIR"
 fi
 
-echo "[5/8] Prepare smoke subset CSV"
+progress_step "Prepare smoke subset CSV"
 if [[ "$CSV_REUSE" == "1" && -f "$CSV_PATH" ]]; then
   echo "Reusing existing subset CSV at $CSV_PATH (build skipped)."
 else
@@ -94,7 +153,17 @@ if [[ ! -f "$CSV_PATH" ]]; then
   exit 1
 fi
 
-echo "[6/8] Authenticate Hugging Face (for gated model access)"
+if [[ -z "$HF_TOKEN" && "$HF_LOGIN_REQUIRED" == "1" && "$PROMPT_FOR_TOKENS" == "1" ]]; then
+  if [[ -t 0 ]]; then
+    read -rsp "Enter HF_TOKEN (input hidden): " HF_TOKEN
+    echo
+  else
+    echo "HF_TOKEN missing and no interactive terminal available for prompt."
+    echo "Set HF_TOKEN env var or run with HF_LOGIN_REQUIRED=0."
+  fi
+fi
+
+progress_step "Authenticate Hugging Face"
 if [[ -n "$HF_TOKEN" ]]; then
   export HUGGINGFACE_HUB_TOKEN="$HF_TOKEN"
   export HF_TOKEN="$HF_TOKEN"
@@ -116,7 +185,7 @@ else
 fi
 
 if [[ "$HF_PREFLIGHT_CHECK" == "1" ]]; then
-  echo "[6/8] Preflight check: verify access to google/medgemma-4b-it"
+  progress_step "Preflight check: verify access to google/medgemma-4b-it"
   python - <<'PY'
 import os
 import sys
@@ -137,20 +206,35 @@ except Exception as e:
 PY
 fi
 
-echo "[7/8] Run smoke training"
-python "$REPO_DIR/smoke_test/smoke_train.py" \
-  --openi \
-  --images "$OPENI_DIR" \
-  --single-view \
-  --batch-size 1 \
-  --max-seq-len 512 \
-  --load-in-4bit
+progress_step "Run smoke training"
+train_args=(
+  --openi
+  --images "$OPENI_DIR"
+  --batch-size "$BATCH_SIZE"
+  --max-seq-len "$MAX_SEQ_LEN"
+  --epochs "$TRAIN_EPOCHS"
+  --lr "$TRAIN_LR"
+  --lora-r "$LORA_R"
+  --lora-alpha "$LORA_ALPHA"
+  --lora-dropout "$LORA_DROPOUT"
+  --lora-target-modules "$LORA_TARGET_MODULES"
+)
 
-echo "[8/8] Confirm output files"
+if [[ "$SINGLE_VIEW" == "1" ]]; then
+  train_args+=(--single-view)
+fi
+
+if [[ "$LOAD_IN_4BIT" == "1" ]]; then
+  train_args+=(--load-in-4bit)
+fi
+
+python "$REPO_DIR/smoke_test/smoke_train.py" "${train_args[@]}"
+
+progress_step "Confirm output files"
 ls -lah "$OUT_DIR"
 
 if [[ "$RUN_EVAL" == "1" ]]; then
-  echo "[8/8] Run evaluation"
+  progress_step "Run evaluation"
   python "$REPO_DIR/smoke_test/eval_colab.py" \
     --adapter-dir "$ADAPTER_DIR" \
     --csv "$CSV_PATH" \
@@ -162,19 +246,44 @@ if [[ "$RUN_EVAL" == "1" ]]; then
   echo "Evaluation outputs:"
   ls -lah /content/eval_output
 else
-  echo "[8/8] Evaluation skipped (set RUN_EVAL=1 to enable)"
+  echo "Evaluation skipped (set RUN_EVAL=1 to enable)"
 fi
 
 echo "Done. Smoke test pipeline completed."
 
 if [[ "$SAVE_RESULTS_VERSION" == "1" ]]; then
-  echo "Saving versioned results snapshot to git"
+  if [[ "$PUSH_RESULTS" == "1" && -z "$GITHUB_TOKEN" && "$PROMPT_FOR_TOKENS" == "1" ]]; then
+    if [[ -t 0 ]]; then
+      read -rsp "Enter GITHUB_TOKEN (input hidden): " GITHUB_TOKEN
+      echo
+    else
+      echo "GITHUB_TOKEN missing and no interactive terminal available for prompt."
+      echo "Versioning will run, but push may fail without GITHUB_TOKEN."
+    fi
+  fi
+
+  progress_step "Save versioned results snapshot to git"
   PUSH="$PUSH_RESULTS" \
   VERSION_LABEL="$VERSION_LABEL" \
   GITHUB_REPO="$GITHUB_REPO" \
   GITHUB_TOKEN="$GITHUB_TOKEN" \
+  TRAIN_OPENI="1" \
+  TRAIN_BATCH_SIZE="$BATCH_SIZE" \
+  TRAIN_MAX_SEQ_LEN="$MAX_SEQ_LEN" \
+  TRAIN_SINGLE_VIEW="$SINGLE_VIEW" \
+  TRAIN_LOAD_IN_4BIT="$LOAD_IN_4BIT" \
+  TRAIN_EPOCHS="$TRAIN_EPOCHS" \
+  TRAIN_LR="$TRAIN_LR" \
+  TRAIN_LORA_R="$LORA_R" \
+  TRAIN_LORA_ALPHA="$LORA_ALPHA" \
+  TRAIN_LORA_DROPOUT="$LORA_DROPOUT" \
+  TRAIN_LORA_TARGET_MODULES="$LORA_TARGET_MODULES" \
+  EVAL_ENABLED="$RUN_EVAL" \
+  EVAL_LIMIT="$EVAL_LIMIT" \
   RESULTS_DIR="$OUT_DIR" \
   EVAL_DIR="/content/eval_output" \
   CSV_PATH="$CSV_PATH" \
   bash "$REPO_DIR/smoke_test/version_results.sh"
 fi
+
+update_status "Completed" "0"

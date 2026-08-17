@@ -6,26 +6,52 @@ set -euo pipefail
 #   bash /content/GemmaTest/smoke_test/version_results.sh
 # Optional env vars:
 #   REPO_DIR=/content/GemmaTest
-#   RESULTS_DIR=/content/smoke_output
+#   RESULTS_DIR=/content/GemmaTest/smoke_output
 #   EVAL_DIR=/content/eval_output
-#   CSV_PATH=/content/smoke_subset.csv
+#   CSV_PATH=/content/GemmaTest/smoke_subset.csv
 #   VERSION_LABEL=colab-t4
 #   BRANCH=main
 #   CREATE_TAG=1
 #   PUSH=0
 #   GITHUB_REPO=MhdAna/GemmaTest
 #   GITHUB_TOKEN=<token>
+#   TRAIN_OPENI=1
+#   TRAIN_BATCH_SIZE=1
+#   TRAIN_MAX_SEQ_LEN=512
+#   TRAIN_SINGLE_VIEW=1
+#   TRAIN_LOAD_IN_4BIT=1
+#   TRAIN_EPOCHS=2
+#   TRAIN_LR=2e-4
+#   TRAIN_LORA_R=8
+#   TRAIN_LORA_ALPHA=16
+#   TRAIN_LORA_DROPOUT=0.05
+#   TRAIN_LORA_TARGET_MODULES=q_proj,v_proj
+#   EVAL_ENABLED=0
+#   EVAL_LIMIT=100
 
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
-RESULTS_DIR="${RESULTS_DIR:-/content/smoke_output}"
+RESULTS_DIR="${RESULTS_DIR:-/content/GemmaTest/smoke_output}"
 EVAL_DIR="${EVAL_DIR:-/content/eval_output}"
-CSV_PATH="${CSV_PATH:-/content/smoke_subset.csv}"
+CSV_PATH="${CSV_PATH:-/content/GemmaTest/smoke_subset.csv}"
 VERSION_LABEL="${VERSION_LABEL:-smoke}"
 BRANCH="${BRANCH:-main}"
 CREATE_TAG="${CREATE_TAG:-1}"
 PUSH="${PUSH:-0}"
 GITHUB_REPO="${GITHUB_REPO:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
+TRAIN_OPENI="${TRAIN_OPENI:-1}"
+TRAIN_BATCH_SIZE="${TRAIN_BATCH_SIZE:-1}"
+TRAIN_MAX_SEQ_LEN="${TRAIN_MAX_SEQ_LEN:-512}"
+TRAIN_SINGLE_VIEW="${TRAIN_SINGLE_VIEW:-1}"
+TRAIN_LOAD_IN_4BIT="${TRAIN_LOAD_IN_4BIT:-1}"
+TRAIN_EPOCHS="${TRAIN_EPOCHS:-2}"
+TRAIN_LR="${TRAIN_LR:-2e-4}"
+TRAIN_LORA_R="${TRAIN_LORA_R:-8}"
+TRAIN_LORA_ALPHA="${TRAIN_LORA_ALPHA:-16}"
+TRAIN_LORA_DROPOUT="${TRAIN_LORA_DROPOUT:-0.05}"
+TRAIN_LORA_TARGET_MODULES="${TRAIN_LORA_TARGET_MODULES:-q_proj,v_proj}"
+EVAL_ENABLED="${EVAL_ENABLED:-0}"
+EVAL_LIMIT="${EVAL_LIMIT:-100}"
 
 if [[ ! -d "$REPO_DIR/.git" ]]; then
   echo "ERROR: Not a git repo: $REPO_DIR"
@@ -71,6 +97,19 @@ base_commit: $base_sha
 results_dir: $RESULTS_DIR
 eval_dir: $EVAL_DIR
 csv_path: $CSV_PATH
+train_openi: $TRAIN_OPENI
+train_batch_size: $TRAIN_BATCH_SIZE
+train_max_seq_len: $TRAIN_MAX_SEQ_LEN
+train_single_view: $TRAIN_SINGLE_VIEW
+train_load_in_4bit: $TRAIN_LOAD_IN_4BIT
+train_epochs: $TRAIN_EPOCHS
+train_lr: $TRAIN_LR
+train_lora_r: $TRAIN_LORA_R
+train_lora_alpha: $TRAIN_LORA_ALPHA
+train_lora_dropout: $TRAIN_LORA_DROPOUT
+train_lora_target_modules: $TRAIN_LORA_TARGET_MODULES
+eval_enabled: $EVAL_ENABLED
+eval_limit: $EVAL_LIMIT
 EOF
 
 git add "$version_dir"

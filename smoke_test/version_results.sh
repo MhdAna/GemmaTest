@@ -28,6 +28,8 @@ set -euo pipefail
 #   TRAIN_LORA_TARGET_MODULES=q_proj,v_proj
 #   EVAL_ENABLED=0
 #   EVAL_LIMIT=100
+#   GIT_USER_NAME="Your Name"
+#   GIT_USER_EMAIL="you@example.com"
 
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 RESULTS_DIR="${RESULTS_DIR:-/content/GemmaTest/smoke_output}"
@@ -52,6 +54,8 @@ TRAIN_LORA_DROPOUT="${TRAIN_LORA_DROPOUT:-0.05}"
 TRAIN_LORA_TARGET_MODULES="${TRAIN_LORA_TARGET_MODULES:-q_proj,v_proj}"
 EVAL_ENABLED="${EVAL_ENABLED:-0}"
 EVAL_LIMIT="${EVAL_LIMIT:-100}"
+GIT_USER_NAME="${GIT_USER_NAME:-}"
+GIT_USER_EMAIL="${GIT_USER_EMAIL:-}"
 
 if [[ ! -d "$REPO_DIR/.git" ]]; then
   echo "ERROR: Not a git repo: $REPO_DIR"
@@ -68,6 +72,24 @@ sanitize() {
 }
 
 cd "$REPO_DIR"
+
+if [[ -n "$GIT_USER_NAME" ]]; then
+  git config user.name "$GIT_USER_NAME"
+fi
+
+if [[ -n "$GIT_USER_EMAIL" ]]; then
+  git config user.email "$GIT_USER_EMAIL"
+fi
+
+if [[ -z "$(git config user.name || true)" || -z "$(git config user.email || true)" ]]; then
+  echo "ERROR: git user identity is not configured for commits."
+  echo "Set repo-local identity with:"
+  echo "  GIT_USER_NAME='Your Name' GIT_USER_EMAIL='you@example.com' bash smoke_test/version_results.sh"
+  echo "Or configure git manually with:"
+  echo "  git config user.name 'Your Name'"
+  echo "  git config user.email 'you@example.com'"
+  exit 1
+fi
 
 stamp="$(date -u +%Y%m%d-%H%M%S)"
 label="$(sanitize "$VERSION_LABEL")"

@@ -22,6 +22,17 @@ PROMPT_FOR_TOKENS="${PROMPT_FOR_TOKENS:-1}"
 HF_TOKEN="${HF_TOKEN:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 
+prompt_hf_token_with_python() {
+  python - <<'PY'
+from getpass import getpass
+
+token = getpass("HF token: ").strip()
+if not token:
+    raise SystemExit(2)
+print(token)
+PY
+}
+
 if [[ "$PROMPT_FOR_TOKENS" == "1" ]]; then
   if [[ -t 0 ]]; then
     # Always ask for HF token in interactive mode to avoid passing it as an argument.
@@ -38,13 +49,18 @@ if [[ "$PROMPT_FOR_TOKENS" == "1" ]]; then
       echo
     fi
   elif [[ -z "$HF_TOKEN" ]]; then
-    echo "HF_TOKEN missing and no interactive terminal is available for prompt."
-    echo "Set HF_TOKEN before running bootstrap. Example in a Python cell:"
-    echo "  import os"
-    echo "  from getpass import getpass"
-    echo "  os.environ['HF_TOKEN'] = getpass('HF token: ')"
-    echo "Then run bootstrap with PROMPT_FOR_TOKENS=0."
-    exit 1
+    echo "No interactive terminal detected; trying Python getpass fallback for HF token..."
+    if HF_TOKEN="$(prompt_hf_token_with_python 2>/dev/null)" && [[ -n "$HF_TOKEN" ]]; then
+      echo "HF token captured via Python prompt."
+    else
+      echo "HF_TOKEN missing and prompt fallback could not run in this environment."
+      echo "Set HF_TOKEN before running bootstrap. Example in a Python cell:"
+      echo "  import os"
+      echo "  from getpass import getpass"
+      echo "  os.environ['HF_TOKEN'] = getpass('HF token: ')"
+      echo "Then run bootstrap with PROMPT_FOR_TOKENS=0."
+      exit 1
+    fi
   fi
 fi
 

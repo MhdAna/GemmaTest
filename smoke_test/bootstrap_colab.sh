@@ -10,10 +10,8 @@ set -euo pipefail
 #   bash <(curl -fsSL https://raw.githubusercontent.com/MhdAna/GemmaTest/main/smoke_test/bootstrap_colab.sh)
 #
 # Notes:
-#   - If PROMPT_FOR_TOKENS=1, this script always prompts for HF_TOKEN and
-#     optionally prompts for GITHUB_TOKEN.
-#   - In non-interactive shells (e.g., some %%bash executions), prompts are not possible.
-#     In that case, set HF_TOKEN in a Python cell first and rerun with PROMPT_FOR_TOKENS=0.
+#   - Provide HF_TOKEN via environment when running this script.
+#   - GITHUB_TOKEN is optional and only needed when push is enabled later.
 
 REPO_URL="${REPO_URL:-https://github.com/MhdAna/GemmaTest.git}"
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
@@ -22,30 +20,10 @@ PROMPT_FOR_TOKENS="${PROMPT_FOR_TOKENS:-1}"
 HF_TOKEN="${HF_TOKEN:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 
-if [[ "$PROMPT_FOR_TOKENS" == "1" ]]; then
-  if [[ -t 0 ]]; then
-    # Always ask for HF token in interactive mode to avoid passing it as an argument.
-    HF_TOKEN=""
-    while [[ -z "$HF_TOKEN" ]]; do
-      read -rsp "Enter HF_TOKEN (input hidden, required): " HF_TOKEN
-      echo
-      if [[ -z "$HF_TOKEN" ]]; then
-        echo "HF_TOKEN cannot be empty for MedGemma gated access."
-      fi
-    done
-    if [[ -z "$GITHUB_TOKEN" ]]; then
-      read -rsp "Enter GITHUB_TOKEN (optional, input hidden): " GITHUB_TOKEN
-      echo
-    fi
-  elif [[ -z "$HF_TOKEN" ]]; then
-    echo "HF_TOKEN missing and no interactive terminal is available for prompt."
-    echo "Set HF_TOKEN before running bootstrap. Example in a Python cell:"
-    echo "  import os"
-    echo "  from getpass import getpass"
-    echo "  os.environ['HF_TOKEN'] = getpass('HF token: ')"
-    echo "Then run bootstrap with PROMPT_FOR_TOKENS=0."
-    exit 1
-  fi
+if [[ -z "$HF_TOKEN" ]]; then
+  echo "ERROR: HF_TOKEN is required."
+  echo "Set HF_TOKEN in environment before running bootstrap."
+  exit 1
 fi
 
 mkdir -p "$(dirname "$REPO_DIR")"

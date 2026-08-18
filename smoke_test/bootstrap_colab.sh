@@ -16,7 +16,6 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/MhdAna/GemmaTest.git}"
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 BRANCH="${BRANCH:-main}"
-PROMPT_FOR_TOKENS="${PROMPT_FOR_TOKENS:-1}"
 HF_TOKEN="${HF_TOKEN:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 

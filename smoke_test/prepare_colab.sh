@@ -14,6 +14,10 @@ set -euo pipefail
 #   REPO_DIR            default: /content/GemmaTest
 #   BRANCH              default: main
 #   PROMPT_FOR_TOKENS   default: 1
+#   SKIP_REPO_SYNC      default: 0 (set 1 if repo already cloned/synced)
+#   AUTO_RUN            default: 0 (set 1 to run smoke pipeline immediately)
+#   AUTO_PUSH           default: 1 (used when AUTO_RUN=1)
+#   PUSH_TAG            default: 1 (used when AUTO_RUN=1 and AUTO_PUSH=1)
 #   HF_TOKEN            optional at prep time, required by gated model run
 #   GITHUB_TOKEN        optional, required only if pushing with token URL
 #   GITHUB_REPO         optional owner/repo, used by version_results when PUSH=1
@@ -24,6 +28,10 @@ REPO_URL="${REPO_URL:-}"
 REPO_DIR="${REPO_DIR:-/content/GemmaTest}"
 BRANCH="${BRANCH:-main}"
 PROMPT_FOR_TOKENS="${PROMPT_FOR_TOKENS:-1}"
+SKIP_REPO_SYNC="${SKIP_REPO_SYNC:-0}"
+AUTO_RUN="${AUTO_RUN:-0}"
+AUTO_PUSH="${AUTO_PUSH:-1}"
+PUSH_TAG="${PUSH_TAG:-1}"
 
 HF_TOKEN="${HF_TOKEN:-}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
@@ -64,20 +72,28 @@ fi
 
 mkdir -p "$(dirname "$REPO_DIR")"
 
-if [[ -d "$REPO_DIR/.git" ]]; then
-  echo "Repo exists, syncing latest changes..."
-  git -C "$REPO_DIR" remote set-url origin "$REPO_URL"
-  git -C "$REPO_DIR" fetch origin
-  git -C "$REPO_DIR" checkout "$BRANCH"
-  git -C "$REPO_DIR" pull --rebase origin "$BRANCH"
+if [[ "$SKIP_REPO_SYNC" == "1" ]]; then
+  if [[ ! -d "$REPO_DIR/.git" ]]; then
+    echo "ERROR: SKIP_REPO_SYNC=1 but repo is missing at $REPO_DIR"
+    exit 1
+  fi
+  echo "Skipping repo clone/sync (SKIP_REPO_SYNC=1)."
 else
-  echo "Cloning repository..."
-  git clone "$REPO_URL" "$REPO_DIR"
-  git -C "$REPO_DIR" checkout "$BRANCH"
+  if [[ -d "$REPO_DIR/.git" ]]; then
+    echo "Repo exists, syncing latest changes..."
+    git -C "$REPO_DIR" remote set-url origin "$REPO_URL"
+    git -C "$REPO_DIR" fetch origin
+    git -C "$REPO_DIR" checkout "$BRANCH"
+    git -C "$REPO_DIR" pull --rebase origin "$BRANCH"
+  else
+    echo "Cloning repository..."
+    git clone "$REPO_URL" "$REPO_DIR"
+    git -C "$REPO_DIR" checkout "$BRANCH"
+  fi
 fi
 
 cd "$REPO_DIR"
-chmod +x smoke_test/run_smoke_colab.sh smoke_test/version_results.sh
+chmod +x smoke_test/run_smoke_colab.sh smoke_test/version_results.sh smoke_test/watch_smoke_status.sh smoke_test/bootstrap_colab.sh
 
 if [[ -n "$GIT_USER_NAME" ]]; then
   git config user.name "$GIT_USER_NAME"
@@ -123,3 +139,38 @@ echo "Preparation complete."
 echo "1) Load environment: source smoke_test/colab.env"
 echo "2) Run pipeline: bash smoke_test/run_smoke_colab.sh"
 echo "3) If PUSH_RESULTS=0, push manually after versioning."
+
+if [[ "$AUTO_RUN" == "1" ]]; then
+  echo
+  echo "AUTO_RUN=1: starting smoke pipeline now..."
+  bash "$REPO_DIR/smoke_test/run_smoke_colab.sh"
+
+  if [[ "$AUTO_PUSH" == "1" ]]; then
+    if [[ -z "$GITHUB_TOKEN" ]]; then
+      echo "ERROR: AUTO_PUSH=1 but GITHUB_TOKEN is empty."
+      echo "Set GITHUB_TOKEN or run with AUTO_PUSH=0."
+      exit 1
+    fi
+
+    branch="$BRANCH"
+    repo_no_proto="${REPO_URL#https://}"
+    auth_url="https://${GITHUB_TOKEN}@${repo_no_proto}"
+
+    echo "Pushing branch: $branch"
+    git push "$auth_url" "$branch"
+
+    if [[ "$PUSH_TAG" == "1" ]]; then
+      latest_tag="$(git tag --sort=-creatordate | head -n 1 || true)"
+      if [[ -n "$latest_tag" ]]; then
+        echo "Pushing latest tag: $latest_tag"
+        git push "$auth_url" "$latest_tag"
+      else
+        echo "No tags found to push."
+      fi
+    fi
+
+    echo "Auto run + push complete."
+  else
+    echo "AUTO_PUSH=0, skipping git push."
+  fi
+fi

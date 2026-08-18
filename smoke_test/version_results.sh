@@ -82,13 +82,23 @@ if [[ -n "$GIT_USER_EMAIL" ]]; then
 fi
 
 if [[ -z "$(git config user.name || true)" || -z "$(git config user.email || true)" ]]; then
-  echo "ERROR: git user identity is not configured for commits."
-  echo "Set repo-local identity with:"
-  echo "  GIT_USER_NAME='Your Name' GIT_USER_EMAIL='you@example.com' bash smoke_test/version_results.sh"
-  echo "Or configure git manually with:"
-  echo "  git config user.name 'Your Name'"
-  echo "  git config user.email 'you@example.com'"
-  exit 1
+  fallback_name="colab-runner"
+  fallback_email="colab-runner@users.noreply.github.com"
+
+  if [[ -n "$GITHUB_REPO" ]]; then
+    repo_owner="${GITHUB_REPO%%/*}"
+    if [[ -n "$repo_owner" && "$repo_owner" != "$GITHUB_REPO" ]]; then
+      fallback_name="$repo_owner"
+      fallback_email="${repo_owner}@users.noreply.github.com"
+    fi
+  fi
+
+  git config user.name "$fallback_name"
+  git config user.email "$fallback_email"
+
+  echo "INFO: git identity was missing; configured repo-local fallback identity."
+  echo "INFO: user.name=$fallback_name"
+  echo "INFO: user.email=$fallback_email"
 fi
 
 stamp="$(date -u +%Y%m%d-%H%M%S)"

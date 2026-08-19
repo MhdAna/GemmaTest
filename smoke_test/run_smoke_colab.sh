@@ -130,6 +130,41 @@ python -m pip install -U "bitsandbytes>=0.46.1" evaluate rouge-score bert-score
 progress_step "Prepare OpenI dataset"
 mkdir -p "$OPENI_DIR"
 
+download_openi_archive() {
+  local target_file="$1"
+  local primary_url="$2"
+  local fallback_url="$3"
+  local label="$4"
+
+  local ok=0
+  for url in "$primary_url" "$fallback_url"; do
+    if [[ -z "$url" ]]; then
+      continue
+    fi
+
+    echo "Downloading $label from: $url"
+    if curl -L --fail -A "Mozilla/5.0" -o "$target_file" "$url"; then
+      if file "$target_file" | grep -qi "gzip compressed data"; then
+        ok=1
+        break
+      fi
+
+      echo "WARN: Downloaded file is not gzip (likely HTML/error page)."
+      echo "WARN: file output: $(file "$target_file")"
+    else
+      echo "WARN: Download failed from: $url"
+    fi
+  done
+
+  if [[ "$ok" != "1" ]]; then
+    echo "ERROR: Could not download a valid OpenI archive for $label."
+    echo "ERROR: The OpenI endpoint is returning non-archive content."
+    echo "Hint: set OPENI_REUSE=1 with an existing dataset folder, or place"
+    echo "      the extracted OpenI files under: $OPENI_DIR"
+    return 1
+  fi
+}
+
 OPENI_READY=0
 if [[ -d "$OPENI_DIR/ecgen-radiology" ]] && find "$OPENI_DIR" -type f -name "*.png" | head -n 1 >/dev/null; then
   OPENI_READY=1
@@ -139,8 +174,17 @@ if [[ "$OPENI_REUSE" == "1" && "$OPENI_READY" == "1" ]]; then
   echo "Reusing existing OpenI data at $OPENI_DIR (download/extract skipped)."
 else
   echo "Downloading OpenI archives"
-  curl -L --fail -o /content/NLMCXR_png.tgz https://openi.nlm.nih.gov/imgs/collections/NLMCXR_png.tgz
-  curl -L --fail -o /content/NLMCXR_reports.tgz https://openi.nlm.nih.gov/imgs/collections/NLMCXR_reports.tgz
+  download_openi_archive \
+    /content/NLMCXR_png.tgz \
+    https://openi.nlm.nih.gov/imgs/collections/NLMCXR_png.tgz \
+    "https://openi.nlm.nih.gov/imgs/collections/NLMCXR_png.tgz?download=1" \
+    "NLMCXR_png"
+
+  download_openi_archive \
+    /content/NLMCXR_reports.tgz \
+    https://openi.nlm.nih.gov/imgs/collections/NLMCXR_reports.tgz \
+    "https://openi.nlm.nih.gov/imgs/collections/NLMCXR_reports.tgz?download=1" \
+    "NLMCXR_reports"
 
   echo "Verify and extract OpenI archives"
   file /content/NLMCXR_png.tgz

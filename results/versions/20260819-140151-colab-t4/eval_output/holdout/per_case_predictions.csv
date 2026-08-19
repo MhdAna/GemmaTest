@@ -1,0 +1,424 @@
+path,reference,base_prediction,ft_prediction
+CXR687_IM-2255-1001.png,"The cardiac silhouette is at the upper limits of normal for size. There are low lung volumes with bronchovascular crowding. No focal areas of pulmonary consolidation. No pneumothorax. No pleural effusion. Minimal degenerative endplate changes of the thoracic spine.
+1. Pulmonary hypoinflation. Otherwise, no acute cardiopulmonary process.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The heart size appears to be within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Hila:** The hila are unremarkable.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+*   **Diaphragm:** The diaphragms are seen.
+*   **Abdomen:** The abdomen","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax. No acute bony abnormalities.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR2006_IM-0656-1001.png,"Heart size is mildly enlarged. The pulmonary XXXX and mediastinum are within normal limits. There is no pleural effusion or pneumothorax. There is no focal air space opacity to suggest a pneumonia. There is a calcified granuloma in the right lung base. There are mild degenerative changes of the spine. There are some chronic increased interstitial markings noted.
+Cardiomegaly without superimposed acute disease identified.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The heart size appears to be mildly enlarged.
+*   **Mediastinum:** The mediastinum is unremarkable in width.
+*   **Lungs:** The lungs are clear bilaterally, with no evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Lines/Catheters:** There are multiple lines and catheters visible, including a central line, likely a dual-chamber pacemaker/ICD, and a central venous catheter. The lines appear to be in appropriate positions.
+*   **Other:** There is a possible small pleural effusion in the right hem","The heart is mildly enlarged. The mediastinum is normal in width. The lungs are clear. The bony structures are intact.
+1. Mild cardiomegaly. 2. No acute pulmonary process."
+CXR120_IM-0133-1001.png,"Low lung volumes bilaterally with central bronchovascular crowding without focal consolidation, pleural effusion, or pneumothoraces.. Cardiomediastinal silhouette is within normal limits. Degenerative changes of the thoracic spine..
+Low lung volumes bilaterally with central bronchovascular crowding without focal cardiopulmonary disease. .","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The heart appears enlarged, with a prominent cardiac silhouette.
+*   **Lung Fields:** The lung fields are relatively clear, with no obvious consolidation, pleural effusion, or pneumothorax. There is some increased opacity in the right lower lung field, which could be due to atelectasis or a small infiltrate.
+*   **Mediastinum:** The mediastinum appears unremarkable.
+*   **Bones:** The visualized bony structures are intact.
+*   **Other:** There is a catheter in the left arm.
+
+**Impression:**
+
+*   The heart size is enlarged, which could be due to cardiomeg","The heart is mildly enlarged. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR3829_IM-1932-1001.png,"Stable moderate cardiomegaly. Mediastinal contours are unchanged. Stable prominence of the central pulmonary vasculature with coarse central interstitial markings. Decreased left basilar airspace disease. No visible pleural effusion or pneumothorax.
+1. Stable moderate cardiomegaly with prominent central pulmonary vasculature. 2. Improved left basilar atelectasis or infiltrate.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged, with increased prominence of the left ventricle.
+*   **Mediastinum:** The mediastinum is within normal limits in width.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+
+**Impression:**
+
+*   **Enlarged Cardiac Silhouette:** The enlarged cardiac silhouette, particularly the left ventricle, warrants further investigation to rule out cardiomegaly or other cardiac abnormalities.
+*   **","The heart is enlarged. The mediastinum is widened. The lungs are clear. No pleural effusion or pneumothorax.
+1. Cardiomegaly. 2. Widened mediastinum."
+CXR2276_IM-0863-1001-0001.png,"This radiograph was XXXX available for my interpretation at XXXX hours XXXX/XXXX. There are low lung volumes with associated bronchovascular crowding and basilar subsegmental atelectasis. The cardiomediastinal silhouette and pulmonary vasculature are within normal limits. There is no pneumothorax or pleural effusion. There are no focal areas of consolidation.
+No acute cardiopulmonary abnormality.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., shortness of breath, cough)
+
+**Findings:**
+
+*   **Lung Fields:** The lung fields appear clear bilaterally, with no evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Heart Size:** The cardiac silhouette appears within normal limits in size.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Hila:** The hila are unremarkable.
+*   **Bones:** The visualized bony structures (ribs, clavicles, thoracic spine) appear intact without evidence of fractures or significant degenerative changes.
+*   **Lines/Catheters:** A central line is seen, with the tip likely in the superior vena cava.","The heart size is normal. The mediastinum is normal in size. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax is identified. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR2477_IM-1006-1001.png,"Intact XXXX sternotomy XXXX. Stable cardiomegaly with grossly unchanged rightward mediastinal shift. Unchanged appearance of left perihilar calcified lymph XXXX and left basilar calcified granuloma. Relatively unchanged appearance of prominent interstitial markings with patchy bibasilar atelectasis. The negative for pneumothorax, focal infiltrate, or large pleural effusion. No acute bony abnormalities.
+1. Stable cardiomegaly with right mediastinal shift. 2. Stable interstitial markings and prominent bibasilar airspace opacities which XXXX represent atelectasis.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged, with increased prominence of the right ventricle.
+*   **Mediastinum:** The mediastinum is within normal limits in width.
+*   **Lungs:** There is increased opacity in the right lower lung field, which could represent a nodule or consolidation. The left lung appears clear.
+*   **Pleura:** No pleural effusion or pneumothorax is identified.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Other:** The patient is status post sternotomy with sternal wires present.
+
+**Impression:**
+
+*   The cardiac silhouette is","The heart is enlarged. The mediastinum is widened. The lungs are hypoinflated with bronchovascular crowding. There are no focal lung consolidations. No pleural effusion or pneumothorax.
+1. Cardiomegaly. 2. Widened mediastinum. 3. Hypoinflated lungs with bronchovascular crowding."
+CXR1311_IM-0203-1001.png,"Low lung volumes with redemonstrated bronchovascular crowding. The trachea is midline. Negative for pneumothorax, pleural effusion or focal airspace consolidation. The cardiac silhouette size is borderline enlarged.
+1. Borderline enlargement of cardiac silhouette, otherwise no acute cardiopulmonary abnormality. No evidence for active TB.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged, with a prominent left ventricle.
+*   **Mediastinum:** The mediastinum is within normal limits in width.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+
+**Impression:**
+
+*   **Enlarged Cardiac Silhouette:** The enlarged cardiac silhouette, particularly the prominent left ventricle, warrants further investigation","The heart is mildly enlarged. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+1. Mild cardiomegaly. 2. Low lung volumes with bronchovascular crowding. No acute pulmonary process."
+CXR3801_IM-1912-1001.png,"There are midline sternotomy XXXX and mediastinal clips consistent with prior CABG. The heart is enlarged with unfolding of the aorta. There is prominence of the interstitial markings with fluid in the fissures consistent with interstitial edema. There is no focal airspace opacity, large pleural effusion, or pneumothorax. There multilevel degenerative spine changes.
+1. Interstitial pulmonary edema. 2. Cardiomegaly.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** (Assume date is available)
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged.
+*   **Mediastinum:** The mediastinum is unremarkable in width.
+*   **Lungs:** There is some increased opacity in the right lung field, which could be due to a number of factors, including atelectasis, consolidation, or edema. The left lung appears relatively clear.
+*   **Pleura:** No pleural effusion or pneumothorax is identified.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Mediastinal Structures:** The trachea is midline.
+
+**Impression:**
+
+*   The cardiac silhouette is enlarged, which could be due to cardiomegaly or a","The heart is enlarged. The mediastinum is widened. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion or pneumothorax.
+1. Cardiomegaly. 2. Widened mediastinum. 3. Low lung volumes with bronchovascular crowding."
+CXR3231_IM-1528-1001.png,"The lungs and pleural spaces show no acute abnormality. Heart size within normal limits. There is tortuosity of the descending thoracic aorta, unchanged. There is right paratracheal thickening and bilateral hilar enlargement corresponding to lymphadenopathy and XXXX pulmonary arterial enlargement visualized on XXXX chest in XXXX. Radiographically, the findings are grossly stable.
+1. No acute pulmonary abnormality. 2. Abnormal appearance of the mediastinum as discussed below.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The heart size is within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, effusion, or pneumothorax.
+*   **Hila:** The hila are unremarkable.
+*   **Pleura:** There is no evidence of pleural effusion or pneumothorax.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact.
+*   **Soft Tissues:** The soft tissues of the chest wall are unremarkable.","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. There is mild interstitial prominence. No focal consolidation, pleural effusion, or pneumothorax.
+Low lung volumes with mild interstitial prominence. No acute cardiopulmonary findings."
+CXR2582_IM-1080-1001.png,"Low lung volumes with bronchovascular crowding. Otherwise, no focal alveolar consolidation, no definite pleural effusion seen. A dense nodule in the right base suggest a previous granulomatous process. Heart size within normal limits, bronchovascular crowding without typical findings of pulmonary edema.
+Low lung volumes with no definite acute findings.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., ""chest pain,"" ""shortness of breath,"" etc.)
+
+**Findings:**
+
+*   **Heart Size:** The heart size appears within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Hila:** The hila are unremarkable.
+*   **Bones:** The visualized bony structures (ribs, clavicles, thoracic spine) appear intact without obvious fractures or significant degenerative changes.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+*   **Diaphragm:** The","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax is identified. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR3076_IM-1437-1001.png,"Frontal view kyphotic and rotated, low lung volumes with bronchovascular crowding. Otherwise, no definite airspace consolidation or pleural effusion. Accounting for technical factors heart size XXXX borderline enlarged.
+Low lung volumes, otherwise, no definite acute findings.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The heart size is within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, effusion, or pneumothorax.
+*   **Pleura:** The pleural spaces are clear.
+*   **Bones:** The visualized bony structures (ribs, clavicles, thoracic spine) appear intact without evidence of fractures or significant degenerative changes.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+*   **Diaphragm:** The diaphragms are seen and","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax is identified. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR173_IM-0481-1001.png,"Low lung volumes. Cardiomediastinal silhouette and pulmonary vasculature are within normal limits. Lungs are clear. No pneumothorax or pleural effusion. Calcified bilateral hilar lymph XXXX, greater on the left. No acute osseous findings.
+Low lung volumes. No acute cardiopulmonary findings.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+
+**Findings:**
+
+*   **Lungs:** The lungs appear clear bilaterally, with no evidence of consolidation, nodules, or masses. The costophrenic angles are sharp.
+*   **Heart:** The cardiac silhouette is within normal limits in size and contour.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Bones:** The visualized bony structures (ribs, clavicles, thoracic spine) appear intact without evidence of fractures or significant degenerative changes.
+*   **Soft Tissues:** No obvious subcutaneous emphysema or other soft tissue abnormalities are identified.
+*   **Diaphragm:** The diaphragms are seen and appear normal.
+*   **Abdomen:** The bowel loops are seen in the upper abdomen, and there is","The heart size is within normal limits. The mediastinum is unremarkable. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax is identified. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR776_IM-2319-1001.png,"Cardiomediastinal silhouette is within normal limits in size and appearance. Pulmonary vascularity is unremarkable. There are prominent coarse interstitial markings throughout the lungs, with more focal streaky bibasilar opacities, seen only on the frontal XXXX, XXXX atelectasis. Negative for focal airspace disease or consolidation. Negative for pneumothorax or pleural effusion. Limited evaluation reveals the XXXX XXXX are grossly intact.
+1. No acute cardiopulmonary abnormality.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** [Patient Name]
+**Date of Exam:** [Date of Exam]
+**Exam:** Chest X-ray
+**Indication:** [Indication for the exam, if available]
+
+**Findings:**
+
+*   **Heart Size:** The heart size is within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, effusion, or pneumothorax.
+*   **Pleura:** The pleural spaces are clear.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+*   **Other:** There are surgical clips in the right breast.
+
+**Impression:**
+
+The chest X-ray shows no acute cardiopulmonary abnormalities. The lungs are clear, and","The heart size is normal. The mediastinum is normal in size. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR699_IM-2263-1001.png,"Stable enlargement of the cardiac silhouette, stable mediastinal contours. Increased interstitial markings in the central lungs and bases, right greater than left. XXXX opacity on the lateral view over the heart also present on the previous exam suggesting chronic subsegmental atelectasis or scarring. No definite pleural effusion seen.
+Cardiomegaly and increased interstitial opacities which may be compatible with mild pulmonary edema, differential diagnosis includes infection, inflammation, aspiration","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., ""shortness of breath,"" ""chest pain,"" etc.)
+
+**Findings:**
+
+*   **Heart Size:** The heart appears to be mildly enlarged (cardiomegaly).
+*   **Mediastinum:** The mediastinum is unremarkable in width.
+*   **Lungs:** There is a hazy opacity in the right lower lung field, which could represent pneumonia or atelectasis. The left lung appears clear.
+*   **Pleura:** No pleural effusion or pneumothorax is identified.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are seen.
+
+**Impression:**
+
+*   Mild cardiomegaly.","The heart is mildly enlarged. The mediastinum is normal in width. The lungs are clear. No pleural effusion or pneumothorax.
+1. Mild cardiomegaly. 2. No acute pulmonary process."
+CXR1506_IM-0330-1001.png,"There is interval placement of a XXXX on the left chest with the catheter tip in the cavoatrial junction. The heart size is within normal limits. Lung volumes within normal limits. Slightly prominent pulmonary vascularity noted. Increased peribronchial cuffing. No large consolidation, effusion, or pneumothorax. There is subpleural edema outlining the right XXXX fissure.
+1. Stable and adequately placed XXXX. 2. Prominent pulmonary vasculature, subpleural edema, and peribronchial cuffing suggestive of volume overload versus viral bronchiolitis.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., ""Follow-up on pneumothorax,"" ""Chest pain"")
+
+**Findings:**
+
+*   **Lungs:** The lungs are clear bilaterally, without evidence of consolidation, effusion, or pneumothorax.
+*   **Heart:** The cardiac silhouette is within normal limits in size and contour.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact without evidence of fracture.
+*   **Soft Tissues:** No obvious soft tissue abnormalities are identified.
+*   **Foreign Body:** A radiopaque foreign body is seen in the left main bronchus,","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+No acute cardiopulmonary abnormality."
+CXR1449_IM-0290-1001.png,"The cardiac silhouette is enlarged with no comparison studies. Findings are XXXX accentuated by low lung volumes and eventration of the anterior right hemidiaphragm, however, cardiomegaly or less XXXX, pericardial effusion is suspected. The lungs are hypoinflated with central bronchovascular crowding but no evidence of overt pulmonary edema. The lungs are grossly clear of focal airspace disease, pneumothorax, pleural effusion. There are no acute bony findings. There are degenerative changes of the thoracic spine. Patient appears morbidly obese.
+1. Suspected cardiomegaly, less XXXX pericardial effusion. Prior comparison studies would be helpful. 2. Low lung volumes. No evidence of focal airspace disease. .","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume the reason for the exam is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged, with increased prominence of the left ventricle.
+*   **Lung Fields:** The lung fields are relatively clear, with no obvious consolidation, pleural effusion, or pneumothorax identified. There is some increased opacity in the lower lung fields, which could be due to atelectasis or other factors.
+*   **Mediastinum:** The mediastinum appears within normal limits in width.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Other:** No obvious masses or lesions are seen.
+
+**Impression:**
+
+*   **Enlarged Cardiac Silhouette:** The","The heart is enlarged. The mediastinum is widened. The lung volumes are low with bronchovascular crowding. No focal consolidation, pleural effusion or pneumothorax.
+1. Cardiomegaly. 2. Widened mediastinum. 3. Low lung volumes with bronchovascular crowding."
+CXR847_IM-2369-1001.png,"The trachea is midline. The heart XXXX is slightly large. There are low lung volumes causing bronchovascular crowding. Otherwise the lungs appear clear, without evidence of acute infiltrate or effusion. There is no pneumothorax. Visualized bony structures reveal no acute abnormalities.
+No acute cardiopulmonary abnormalities.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Lung Fields:** The lung fields are relatively clear bilaterally. There is no evidence of large consolidation, pleural effusion, or pneumothorax.
+*   **Heart Size:** The heart size appears within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Hila:** The hila are unremarkable.
+*   **Diaphragm:** The diaphragms are visualized and appear normal.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact without obvious fractures.
+*   **Soft Tissues:** There are no obvious soft tissue abnormalities.","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. There is mild interstitial edema. No focal consolidation, pleural effusion, or pneumothorax.
+Low lung volumes with mild interstitial edema. No acute cardiopulmonary process."
+CXR955_IM-2449-1001.png,"Stable position of right central venous catheter. Interval removal of nasogastric tube. Heart size is normal. Persistent prominent interstitial markings of the right upper lobe. There are no XXXX focal air space consolidations. No pleural effusions or pneumothoraces. The hilar and mediastinal contours are unchanged. Normal pulmonary vascularity.
+No acute abnormality. Stable chest.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** (Assume date is available)
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Lungs:** The lungs appear relatively clear bilaterally. There is no obvious evidence of large consolidation, pleural effusion, or pneumothorax. However, subtle opacities are noted in the right upper lobe, which could represent early pneumonia or other inflammatory process.
+*   **Heart:** The heart size is within normal limits. The mediastinal contours are unremarkable.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Lines/Catheters:** A right-sided central line is present, with the tip likely in the superior vena cava. The line appears to be in good position.
+*   **Abdomen:** The bowel loops are not dilated.","The heart size is normal. The mediastinum is normal in width. The lung volumes are low with bronchovascular crowding. There is no focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+Low lung volumes with bronchovascular crowding. No acute cardiopulmonary findings."
+CXR273_IM-1188-1001.png,"Heart size mildly to moderately enlarged. Mild right hemidiaphragm elevation with mild bronchovascular crowding, right greater than left, indistinct vascular margination. No definite focal alveolar consolidation, no pleural effusion XXXX demonstrated.
+1. Cardiomegaly 2. Indistinct vascular margination which may be secondary to bronchovascular crowding however differential diagnosis includes mild pulmonary edema, atypical infection, inflammation","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume a patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+
+**Findings:**
+
+*   **Heart Size:** The cardiac silhouette appears enlarged.
+*   **Lung Fields:** The lung fields are clear bilaterally, without evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Mediastinum:** The mediastinum is unremarkable.
+*   **Bones:** The visualized bony structures appear intact.
+*   **Diaphragm:** The diaphragms are seen.
+
+**Impression:**
+
+*   **Enlarged Cardiac Silhouette:** The enlarged cardiac silhouette warrants further evaluation to rule out cardiomegaly or other potential causes.
+*   **Otherwise Normal:** The lungs are clear, and there are no acute findings.
+
+**Recommendations:**
+
+*   Consider further evaluation of the cardiac silhouette, such as echocardiography, to assess cardiac function and","The heart is mildly enlarged. The mediastinum is unremarkable. The lungs are clear. No pleural effusion or pneumothorax.
+1. Mild cardiomegaly. 2. No acute pulmonary process."
+CXR1443_IM-0286-1001.png,"XXXX XXXX and lateral chest examination was obtained. The heart silhouette is normal in size and contour. Aortic XXXX appear unremarkable. Lungs demonstrate increased interstitial markings probably COPD. There is calcified hilar lymph XXXX. There is no effusion or pneumothorax.
+1. No acute pulmonary disease.","Here's a structured radiology report based on the provided chest X-ray:
+
+**Radiology Report**
+
+**Patient:** (Assume patient name is available)
+**Date:** October 26, 2023
+**Exam:** Chest X-ray
+**Indication:** (Assume indication is available, e.g., chest pain, shortness of breath)
+
+**Findings:**
+
+*   **Lung Fields:** The lung fields appear clear bilaterally, with no evidence of consolidation, pleural effusion, or pneumothorax.
+*   **Heart Size:** The heart size is within normal limits.
+*   **Mediastinum:** The mediastinum is unremarkable in width and alignment.
+*   **Hila:** The hila are unremarkable.
+*   **Bones:** The visualized bony structures (ribs, clavicles, and thoracic spine) appear intact without evidence of fractures or significant degenerative changes.
+*   **Soft Tissues:** The soft tissues of the chest wall are unremarkable.
+*   **Diaphragm:** The diaphragms are flat","The heart size is normal. The mediastinum is normal in size. The lungs are clear without evidence of focal consolidation, pleural effusion, or pneumothorax. The bony structures are intact.
+No acute cardiopulmonary abnormality."

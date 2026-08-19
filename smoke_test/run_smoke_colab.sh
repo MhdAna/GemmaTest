@@ -8,7 +8,14 @@ set -euo pipefail
 #   REPO_DIR=/content/GemmaTest
 #   OPENI_REUSE=1
 #   CSV_REUSE=1
+#   HOLDOUT behavior: filter_openi.py now saves 20-case holdout to
+#   /content/GemmaTest/smoke_test_holdout.csv and excludes it from smoke_subset.csv
 #   RUN_EVAL=1
+#   RUN_HOLDOUT_EVAL=1
+#   HOLDOUT_CSV=/content/GemmaTest/smoke_test_holdout.csv
+#   HOLDOUT_LIMIT=20
+#   HOLDOUT_N=20
+#   HOLDOUT_SEED=42
 #   HF_TOKEN=<hf_token_with_model_access>
 #   HF_LOGIN_REQUIRED=1
 #   PROMPT_FOR_TOKENS=1
@@ -38,6 +45,7 @@ OUT_DIR="${OUT_DIR:-$REPO_DIR/smoke_output}"
 OPENI_REUSE="${OPENI_REUSE:-1}"
 CSV_REUSE="${CSV_REUSE:-1}"
 RUN_EVAL="${RUN_EVAL:-0}"
+RUN_HOLDOUT_EVAL="${RUN_HOLDOUT_EVAL:-0}"
 HF_TOKEN="${HF_TOKEN:-}"
 HF_LOGIN_REQUIRED="${HF_LOGIN_REQUIRED:-1}"
 HF_PREFLIGHT_CHECK="${HF_PREFLIGHT_CHECK:-1}"
@@ -54,6 +62,12 @@ LORA_DROPOUT="${LORA_DROPOUT:-0.05}"
 LORA_TARGET_MODULES="${LORA_TARGET_MODULES:-q_proj,v_proj}"
 ADAPTER_DIR="${ADAPTER_DIR:-$OUT_DIR}"
 EVAL_LIMIT="${EVAL_LIMIT:-100}"
+HOLDOUT_LIMIT="${HOLDOUT_LIMIT:-}"
+HOLDOUT_CSV="${HOLDOUT_CSV:-$REPO_DIR/smoke_test_holdout.csv}"
+HOLDOUT_N="${HOLDOUT_N:-20}"
+HOLDOUT_SEED="${HOLDOUT_SEED:-42}"
+EVAL_OUTPUT_DIR="${EVAL_OUTPUT_DIR:-/content/eval_output}"
+HOLDOUT_OUTPUT_DIR="${HOLDOUT_OUTPUT_DIR:-$EVAL_OUTPUT_DIR/holdout}"
 SAVE_RESULTS_VERSION="${SAVE_RESULTS_VERSION:-0}"
 VERSION_LABEL="${VERSION_LABEL:-smoke}"
 PUSH_RESULTS="${PUSH_RESULTS:-0}"
@@ -66,6 +80,9 @@ if [[ "$HF_PREFLIGHT_CHECK" == "1" ]]; then
   TOTAL_STEPS=$((TOTAL_STEPS + 1))
 fi
 if [[ "$RUN_EVAL" == "1" ]]; then
+  TOTAL_STEPS=$((TOTAL_STEPS + 1))
+fi
+if [[ "$RUN_HOLDOUT_EVAL" == "1" ]]; then
   TOTAL_STEPS=$((TOTAL_STEPS + 1))
 fi
 if [[ "$SAVE_RESULTS_VERSION" == "1" ]]; then
@@ -142,7 +159,9 @@ if [[ "$CSV_REUSE" == "1" && -f "$CSV_PATH" ]]; then
 else
   python "$REPO_DIR/smoke_test/filter_openi.py" \
     --reports "$OPENI_DIR/ecgen-radiology" \
-    --images "$OPENI_DIR"
+    --images "$OPENI_DIR" \
+    --holdout-n "$HOLDOUT_N" \
+    --seed "$HOLDOUT_SEED"
 
   # filter_openi.py writes to $REPO_DIR/smoke_subset.csv. Copy if caller wants a custom path.
   if [[ "$CSV_PATH" != "$DEFAULT_SUBSET_CSV" ]]; then
@@ -153,6 +172,12 @@ fi
 
 if [[ ! -f "$CSV_PATH" ]]; then
   echo "ERROR: smoke subset CSV not found at $CSV_PATH"
+  exit 1
+fi
+
+if [[ "$RUN_HOLDOUT_EVAL" == "1" && ! -f "$HOLDOUT_CSV" ]]; then
+  echo "ERROR: holdout CSV not found at $HOLDOUT_CSV"
+  echo "Rebuild CSV split with CSV_REUSE=0 or set HOLDOUT_CSV to an existing file."
   exit 1
 fi
 
@@ -242,14 +267,36 @@ if [[ "$RUN_EVAL" == "1" ]]; then
     --adapter-dir "$ADAPTER_DIR" \
     --csv "$CSV_PATH" \
     --images "$OPENI_DIR" \
-    --output-dir /content/eval_output \
+    --output-dir "$EVAL_OUTPUT_DIR" \
     --use-4bit \
     --limit "$EVAL_LIMIT"
 
   echo "Evaluation outputs:"
-  ls -lah /content/eval_output
+  ls -lah "$EVAL_OUTPUT_DIR"
 else
   echo "Evaluation skipped (set RUN_EVAL=1 to enable)"
+fi
+
+if [[ "$RUN_HOLDOUT_EVAL" == "1" ]]; then
+  progress_step "Run holdout evaluation"
+  holdout_eval_args=(
+    --adapter-dir "$ADAPTER_DIR"
+    --csv "$HOLDOUT_CSV"
+    --images "$OPENI_DIR"
+    --output-dir "$HOLDOUT_OUTPUT_DIR"
+    --use-4bit
+  )
+
+  if [[ -n "$HOLDOUT_LIMIT" ]]; then
+    holdout_eval_args+=(--limit "$HOLDOUT_LIMIT")
+  fi
+
+  python "$REPO_DIR/smoke_test/eval_colab.py" "${holdout_eval_args[@]}"
+
+  echo "Holdout evaluation outputs:"
+  ls -lah "$HOLDOUT_OUTPUT_DIR"
+else
+  echo "Holdout evaluation skipped (set RUN_HOLDOUT_EVAL=1 to enable)"
 fi
 
 echo "Done. Smoke test pipeline completed."
@@ -284,7 +331,7 @@ if [[ "$SAVE_RESULTS_VERSION" == "1" ]]; then
   EVAL_ENABLED="$RUN_EVAL" \
   EVAL_LIMIT="$EVAL_LIMIT" \
   RESULTS_DIR="$OUT_DIR" \
-  EVAL_DIR="/content/eval_output" \
+  EVAL_DIR="$EVAL_OUTPUT_DIR" \
   CSV_PATH="$CSV_PATH" \
   bash "$REPO_DIR/smoke_test/version_results.sh"
 fi

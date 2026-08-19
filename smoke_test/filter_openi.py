@@ -14,11 +14,16 @@ parser.add_argument("--reports", type=Path, default=OPENI_DIR / "ecgen-radiology
                     help="Folder containing OpenI XML report files")
 parser.add_argument("--images", type=Path, default=OPENI_DIR / "NLMCXR_png",
                     help="Folder containing OpenI PNG images")
+parser.add_argument("--holdout-n", type=int, default=20,
+                    help="Number of cases to keep as final test holdout")
+parser.add_argument("--seed", type=int, default=42,
+                    help="Random seed for sampling/splitting")
 args = parser.parse_args()
 
 REPORT_DIR = args.reports
 IMAGE_DIR  = args.images
 SUBSET_CSV = ROOT / "smoke_subset.csv"
+HOLDOUT_CSV = ROOT / "smoke_test_holdout.csv"
 TARGET_N   = 800  # set to 50 for a quick 5-min sanity check
 
 KEYWORDS = [
@@ -103,9 +108,25 @@ print(f"Keyword matches : {len(matched):,} / {len(df):,}")
 
 if len(matched) == 0:
     print("No keyword matches — using full dataset sample for smoke test")
-    matched = df.sample(min(TARGET_N, len(df)), random_state=42)
+    matched = df.sample(min(TARGET_N, len(df)), random_state=args.seed)
 elif len(matched) > TARGET_N:
-    matched = matched.sample(n=TARGET_N, random_state=42)
+    matched = matched.sample(n=TARGET_N, random_state=args.seed)
 
-matched.to_csv(SUBSET_CSV, index=False)
-print(f"Saved {len(matched)} rows → {SUBSET_CSV}")
+holdout_n = max(0, args.holdout_n)
+if holdout_n > 0 and len(matched) > holdout_n:
+    holdout = matched.sample(n=holdout_n, random_state=args.seed)
+    train_df = matched.drop(index=holdout.index).reset_index(drop=True)
+    holdout = holdout.reset_index(drop=True)
+    holdout.to_csv(HOLDOUT_CSV, index=False)
+    print(f"Saved holdout set: {len(holdout)} rows -> {HOLDOUT_CSV}")
+else:
+    train_df = matched.reset_index(drop=True)
+    if holdout_n > 0:
+        print(
+            "WARNING: Not enough rows to create holdout split "
+            f"(requested {holdout_n}, available {len(matched)})."
+        )
+        print("Holdout CSV not written; training CSV contains all rows.")
+
+train_df.to_csv(SUBSET_CSV, index=False)
+print(f"Saved training set: {len(train_df)} rows -> {SUBSET_CSV}")

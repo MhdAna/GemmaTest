@@ -29,6 +29,7 @@ mkdir -p "$(dirname "$REPO_DIR")"
 
 if [[ -d "$REPO_DIR/.git" ]]; then
   echo "Repo exists, syncing latest changes..."
+  git -C "$REPO_DIR" config core.fileMode false
   git -C "$REPO_DIR" remote set-url origin "$REPO_URL"
   git -C "$REPO_DIR" fetch origin
   git -C "$REPO_DIR" checkout "$BRANCH"
@@ -36,6 +37,7 @@ if [[ -d "$REPO_DIR/.git" ]]; then
 else
   echo "Cloning repository..."
   git clone "$REPO_URL" "$REPO_DIR"
+  git -C "$REPO_DIR" config core.fileMode false
   git -C "$REPO_DIR" checkout "$BRANCH"
 fi
 
